@@ -21,7 +21,7 @@ class RigidBody(Ball):
 
     g_constant = 6.67428*10**-2 # Gravitational Constant
     length_multiplier = 3.7795275591*(10**6) # 1mm treated as a kilometer (in pixels)
-
+    
     def __init__(self,acceleration:[float,float],velocity:[float,float],id:int,radius:float,mass:float,color:(int,int,int),x:float,y:float):
         super().__init__(id,radius,mass,color,x,y)
         self.acceleration = acceleration
