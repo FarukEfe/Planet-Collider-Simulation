@@ -1,6 +1,6 @@
 import pygame as p
-from RigidBody import RigidBody, Ball
-from CollideGroup import CollideGroup
+#from RigidBody import RigidBody, Ball
+#from CollideGroup import CollideGroup
 from RandomGenerator import rigid_random
 import sys
 from copy import copy

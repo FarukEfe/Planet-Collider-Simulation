@@ -56,25 +56,21 @@ class CollideGroup(p.sprite.Group):
                 collision_obj.r += s.r/2
                 collision_obj.m += s.m
                 s.kill()
+            elif type(s).__name__ == 'Ball':
+                s.r += collision_obj.r/2
+                s.m += collision_obj.m
+                collision_obj.kill()
             elif collision_obj.r < s.r:
                 s.r += collision_obj.r/2
                 s.m += collision_obj.m
-                # Change speed value
-                '''
-                vel_x = collision_obj.velocity[0] + s.velocity[0]
-                vel_y = collision_obj.velocity[1] + s.velocity[1]
-                s.velocity = [vel_x,vel_y]
-                '''
+                # Change speed value using perfectly inelastic collision
+                s.velocity = p_inelastic_velocity(collision_obj,s)
                 collision_obj.kill()
             else:
                 collision_obj.r += s.r/2
                 collision_obj.m += s.m
                 # Change speed value
-                '''
-                vel_x = collision_obj.velocity[0] + s.velocity[0]
-                vel_y = collision_obj.velocity[1] + s.velocity[1]
-                collision_obj.velocity = [vel_x,vel_y]
-                '''
+                collision_obj.velocity = p_inelastic_velocity(collision_obj,s)
                 s.kill()
     
     def should_merge(self,obj1:Ball,obj2:Ball) -> bool:
@@ -91,8 +87,11 @@ class CollideGroup(p.sprite.Group):
             return True
         return False
 
-
-
-        
-
-        
+# Uses perfectly inelastic collision type to find momentum, then speed
+def p_inelastic_velocity(obj1:RigidBody,obj2:RigidBody) -> [float,float]:
+    total_mass = obj1.m + obj2.m
+    momentum_x = obj1.velocity[0]*obj1.m + obj2.velocity[0]*obj2.m    
+    momentum_y = obj1.velocity[1]*obj1.m + obj2.velocity[1]*obj2.m  
+    vel_x = momentum_x/total_mass
+    vel_y = momentum_y/total_mass
+    return [vel_x,vel_y]
