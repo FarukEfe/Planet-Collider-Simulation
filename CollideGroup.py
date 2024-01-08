@@ -44,30 +44,34 @@ class CollideGroup(p.sprite.Group):
     def collision_detect(self):
         sprites = self.sprites()
         for s in sprites:
+
             collision_obj = p.sprite.spritecollideany(s,self)
+
             # If the collision object is itself, then ignore
             if collision_obj == None or collision_obj.id == s.id:
                 continue
             # If not close enough to merge, ignore
             if not self.should_merge(collision_obj,s):
                 continue
+
+            r_new = new_radius(collision_obj,s)
             # Else, check for merge type
             if type(collision_obj).__name__ == 'Ball':
-                collision_obj.r += s.r/2
+                collision_obj.r = r_new
                 collision_obj.m += s.m
                 s.kill()
             elif type(s).__name__ == 'Ball':
-                s.r += collision_obj.r/2
+                s.r = r_new
                 s.m += collision_obj.m
                 collision_obj.kill()
             elif collision_obj.r < s.r:
-                s.r += collision_obj.r/2
+                s.r = r_new
                 s.m += collision_obj.m
                 # Change speed value using perfectly inelastic collision
                 s.velocity = p_inelastic_velocity(collision_obj,s)
                 collision_obj.kill()
             else:
-                collision_obj.r += s.r/2
+                collision_obj.r = r_new
                 collision_obj.m += s.m
                 # Change speed value
                 collision_obj.velocity = p_inelastic_velocity(collision_obj,s)
@@ -87,6 +91,8 @@ class CollideGroup(p.sprite.Group):
             return True
         return False
 
+# HELPERS
+    
 # Uses perfectly inelastic collision type to find momentum, then speed
 def p_inelastic_velocity(obj1:RigidBody,obj2:RigidBody) -> [float,float]:
     total_mass = obj1.m + obj2.m
@@ -95,3 +101,8 @@ def p_inelastic_velocity(obj1:RigidBody,obj2:RigidBody) -> [float,float]:
     vel_x = momentum_x/total_mass
     vel_y = momentum_y/total_mass
     return [vel_x,vel_y]
+
+# Finds post-collision radius based on total area
+def new_radius(obj1:Ball,obj2:Ball) -> float:
+    total_area = m.pi*obj1.r**2 + m.pi*obj2.r**2
+    return m.sqrt(total_area/m.pi)

@@ -48,11 +48,5 @@ while on:
     sprites.update_accelerations()
     sprites.update_positions()
 
-
     # Set up frames per second
     clock.tick(time_speed)
-
-
-# TO-DO:
-# combine radii for a list of rigid/stationary balls when in collision
-# Learn to use Sprite Groups to check multiple-mass collisions
