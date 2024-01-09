@@ -7,19 +7,19 @@ def rigid_random(n:int, max_x:int,max_y:int,central_mass:bool) -> CollideGroup:
     # Initiate CollideGroup
     group = CollideGroup()
     if central_mass:
-        h = Ball(0,35,1.8*10**17,(250,250,130),max_x/2, max_y/2)
+        h = Ball(0,10,1.8*10**17,(250,250,130),max_x/2, max_y/2)
         group.add(h)
     # Generate n random rigidbodies
     for i in range(n):
         # Random generated radius
         gen_r = randint(8,12)
 
-        # Random generated mass
+        # Mass generated based on radius (same density for all rigidbodies)
         gen_m = 1
         if central_mass:
-            gen_m = randint(5000,10000)
+            gen_m = gen_r*750
         else:
-            gen_m = randint(10**13,9*10**14)
+            gen_m = gen_r*10**13 
 
         # Random generated position
         gen_x = randint(gen_r,max_x-gen_r)
