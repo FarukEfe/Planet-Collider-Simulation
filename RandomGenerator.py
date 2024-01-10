@@ -19,7 +19,7 @@ def rigid_random(n:int, max_x:int,max_y:int,central_mass:bool) -> CollideGroup:
         if central_mass:
             gen_m = gen_r*750
         else:
-            gen_m = gen_r*10**13 
+            gen_m = gen_r*10**14 
 
         # Random generated position
         gen_x = randint(gen_r,max_x-gen_r)

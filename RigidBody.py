@@ -7,8 +7,8 @@ class Ball(Sprite):
     def __init__(self,id:int,radius:float,mass:float,color:(int,int,int),x:float,y:float,):
         super().__init__()
         self.id = id
-        self.r = radius
-        self.m = mass
+        self.r = radius # in km
+        self.m = mass # in kg
         self.rgb = color
         self.x = x
         self.y = y
