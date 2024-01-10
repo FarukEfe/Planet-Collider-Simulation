@@ -16,10 +16,10 @@ window = p.display.set_mode((WIDTH,HEIGHT))
 p.display.set_caption("Sandbox")
 clock = p.time.Clock()
 
-time_speed = 120 # Updates 64 times per second
+time_speed = 214 # Updates 64 times per second
 
 # GAME SPRITES SETUP
-sprites = rigid_random(20,WIDTH,HEIGHT,True)
+sprites = rigid_random(20,WIDTH,HEIGHT,False)
 
 # LIFECYCLE
 on =  True
