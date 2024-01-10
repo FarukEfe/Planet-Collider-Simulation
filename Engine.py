@@ -1,31 +1,25 @@
 import pygame as p
-#from RigidBody import RigidBody, Ball
-#from CollideGroup import CollideGroup
 from RandomGenerator import rigid_random
 import sys
-from copy import copy
-
-# GAME DISPLAY SETUP
 
 WIDTH = 1000
 HEIGHT = 600
 
+# PyGame Setup
 p.init()
 
 window = p.display.set_mode((WIDTH,HEIGHT))
-p.display.set_caption("Sandbox")
+p.display.set_caption("Planet Collider")
 clock = p.time.Clock()
 
-time_speed = 214 # Updates 64 times per second
+time_speed = 214 # Define FPS
 
 # GAME SPRITES SETUP
 sprites = rigid_random(20,WIDTH,HEIGHT,False)
 
 # LIFECYCLE
-on =  True
-while on:
+while True:
 
-    # Display objects
     window.fill((35,35,35))
 
     # Display sprite groups
@@ -33,20 +27,16 @@ while on:
 
     p.display.flip()
 
-    # Listen to events
     for event in p.event.get():
         if event.type == p.QUIT:
             p.quit()
             sys.exit(0)
     
 
-    # Sprites Collision
     sprites.collision_detect()
 
-    # Update sprite velocity, acceleration, and position if not killed
     sprites.update_velocities(WIDTH,HEIGHT)
     sprites.update_accelerations()
     sprites.update_positions()
 
-    # Set up frames per second
     clock.tick(time_speed)

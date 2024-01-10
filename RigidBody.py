@@ -68,29 +68,6 @@ class RigidBody(Ball):
 
         self.velocity[0] += self.acceleration[0]
         self.velocity[1] += self.acceleration[1]
-
-    def collision_velocity(self, body):
-        '''
-        Updates velocity after elastic collision
-        - If the collision body is a ball, then the current velocity reflects back with the rebound angle
-        - If the collision body is a rigidbody, then find new magnitude from conservation of momentum
-        '''
-        if type(body) == Ball:
-            # get magnitude
-            rise = self.y - body.y
-            run = self.x - body.x
-            
-            alpha = 2*m.atan2(rise,run)
-            # negate alpha depending on approach to collision point
-            
-            
-            # apply rotational matrix to calculate new components
-            new_x = m.cos(alpha) * self.velocity[0] - m.sin(alpha) * self.velocity[1]
-            new_y = m.sin(alpha) * self.velocity[0] + m.cos(alpha) * self.velocity[1]
-            self.velocity = [new_x,new_y]
-
-        # Prevent from multiple switches during consecutive instances of collision
-        self.in_collision = True
     
     def update_position(self):
         self.x += self.velocity[0]
