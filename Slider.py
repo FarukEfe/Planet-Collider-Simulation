@@ -24,6 +24,11 @@ class Slider:
         self.container = p.Rect(self.slider_left_pos,self.slider_top_pos,self.size[0],self.size[1])
         self.button_rect = p.Rect(self.slider_left_pos + self.initial_val - 5, self.slider_top_pos,10,self.size[1])
 
+    def change_value(self, mouse_pos) -> float:
+        self.button_rect = p.Rect(self.slider_left_pos + self.initial_val - 5, self.slider_top_pos,10,self.size[1])
+        self.button_rect.centerx = mouse_pos[0]
+        return mouse_pos[0] / (self.slider_left_pos + self.initial_val)
+    
     def render(self,window):
         p.draw.rect(window, "darkgray", self.container)
-        p.draw.rect(window, "white", self.button_rect)
+        p.draw.rect(window, "blue", self.button_rect)
