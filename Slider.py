@@ -24,10 +24,15 @@ class Slider:
         self.container = p.Rect(self.slider_left_pos,self.slider_top_pos,self.size[0],self.size[1])
         self.button_rect = p.Rect(self.slider_left_pos + self.initial_val - 5, self.slider_top_pos,8,self.size[1])
 
-    def change_value(self, mouse_pos) -> float:
+    def set_button_pos(self, mouse_pos) -> float:
         self.button_rect.centerx = mouse_pos[0]
-        return mouse_pos[0]* 5/ self.initial_val
     
     def render(self,window):
         p.draw.rect(window, "darkgray", self.container)
         p.draw.rect(window, "blue", self.button_rect)
+    
+    def get_value(self) -> float:
+        length = self.slider_right_pos = self.slider_left_pos
+        button_range = self.button_rect.centerx - self.slider_left_pos
+        # Get button value expressed as range from min to max, with min as offset
+        return (button_range/length)*(self.max - self.min)+self.min
