@@ -49,6 +49,7 @@ while True:
     mouse_pressed = p.mouse.get_pressed()[0]
 
     if speed_slider.container.collidepoint(cursor) and mouse_pressed:
-        speed_slider.change_value(cursor)
+        speed_val = speed_slider.change_value(cursor)
+        time_speed = 214 * speed_val
 
     clock.tick(time_speed)

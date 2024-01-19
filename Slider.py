@@ -26,7 +26,7 @@ class Slider:
 
     def change_value(self, mouse_pos) -> float:
         self.button_rect.centerx = mouse_pos[0]
-        return mouse_pos[0] / (self.slider_left_pos + self.initial_val)
+        return mouse_pos[0]* 5/ self.initial_val
     
     def render(self,window):
         p.draw.rect(window, "darkgray", self.container)
