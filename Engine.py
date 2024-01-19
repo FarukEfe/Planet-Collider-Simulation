@@ -18,18 +18,14 @@ time_speed = 214 # Define FPS
 # GAME SPRITES SETUP
 sprites = rigid_random(20,WIDTH,HEIGHT,False)
 
-speed_slider = Slider((WIDTH - 125,50),(100,8), 20, 0, 100)
-
-cursor = p.mouse.get_pos()
-if speed_slider.container.collidepoint(cursor):
-    speed_slider.change_value(cursor)
+speed_slider = Slider((WIDTH - 125,50),(100,8), 0.2, 0, 100)
 
 # LIFECYCLE
 while True:
 
     window.fill((35,35,35))
 
-    # Display Slider
+    # Display & Update Slider
     speed_slider.render(window)
 
     # Display sprite groups
@@ -42,11 +38,17 @@ while True:
             p.quit()
             sys.exit(0)
     
-
+    # Update Sprites Group
     sprites.collision_detect()
 
     sprites.update_velocities(WIDTH,HEIGHT)
     sprites.update_accelerations()
     sprites.update_positions()
+
+    cursor = p.mouse.get_pos()
+    mouse_pressed = p.mouse.get_pressed()[0]
+
+    if speed_slider.container.collidepoint(cursor) and mouse_pressed:
+        speed_slider.change_value(cursor)
 
     clock.tick(time_speed)
