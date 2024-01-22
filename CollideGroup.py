@@ -7,7 +7,7 @@ class CollideGroup(p.sprite.Group):
     def __init__(self,*bodies):
         super().__init__(bodies)
         self.bodies = list(bodies)
-    
+  
     def draw(self,win):
         sprites = self.sprites()
         for sprite in sprites:
@@ -89,6 +89,12 @@ class CollideGroup(p.sprite.Group):
         # Return should_merge
         if distance < bigger_radius:
             return True
+        return False
+    
+    def mouse_click(self,cursor) -> bool:
+        for body in self.bodies:
+            if body.mouse_collision(cursor):
+                return True
         return False
 
 # HELPERS

@@ -1,6 +1,7 @@
 import pygame as p
 from RandomGenerator import rigid_random
 from Slider import Slider
+from RigidBody import RigidBody, Ball
 import sys
 
 WIDTH = 1000
@@ -29,15 +30,38 @@ class Engine:
         self.textRect.right = WIDTH - 115
         self.textRect.centery = 55
 
-    def update_text(self):
-        cursor = p.mouse.get_pos()
+    def update_click(self):
         mouse_pressed = p.mouse.get_pressed()[0]
 
-        if self.speed_slider.container.collidepoint(cursor) and mouse_pressed:
+        if not mouse_pressed:
+            return
+        
+        cursor = p.mouse.get_pos()
+
+        if self.speed_slider.container.collidepoint(cursor):
             self.speed_val = self.speed_slider.set_button_pos(cursor)
             self.time_speed = 214 * self.speed_slider.get_value()
+            return
+        
+        if self.sprites.mouse_click(cursor):
+            return
+        
+        
+        id_list = self.sprites.id_list()
+        new_id = max(id_list) + 1
+        new = RigidBody(
+            [0,0],
+            [0,0],
+            new_id,
+            15,
+            15*10**14,
+            (250,135,135),
+            cursor[0],
+            cursor[1]
+            )
+        self.sprites.add(new)            
     
-        # Update Text
+    def update_text(self):
         self.text = self.font.render(f'Speed x {round(self.time_speed / 21.4)/10}', True, (230,230,230), (35,35,35))
 
     def update_sprites(self):
@@ -73,6 +97,8 @@ class Engine:
         self.update_sprites()
 
         self.update_text()
+
+        self.update_click()
 
         self.clock.tick(self.time_speed)
     

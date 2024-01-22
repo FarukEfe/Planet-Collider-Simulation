@@ -72,3 +72,10 @@ class RigidBody(Ball):
     def update_position(self):
         self.x += self.velocity[0]
         self.y += self.velocity[1]
+    
+    def mouse_collision(self,cursor) -> bool:
+        if self.rect.collidepoint(cursor):
+            self.kill()
+            return True
+        return False
+        
