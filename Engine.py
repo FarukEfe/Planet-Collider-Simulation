@@ -1,8 +1,9 @@
 import pygame as p
+import sys
+from datetime import date, datetime
 from RandomGenerator import rigid_random
 from Slider import Slider
 from RigidBody import RigidBody, Ball
-import sys
 
 WIDTH = 1000
 HEIGHT = 600
@@ -12,6 +13,9 @@ class Engine:
     window = p.display.set_mode((WIDTH,HEIGHT))
     clock = p.time.Clock()
     time_speed = 214 # FPS
+
+    # Track last object creation
+    last_creation: date = None
 
     def __init__(self, gen_n:int, central_mass:bool):
         p.init()
@@ -43,10 +47,15 @@ class Engine:
             self.time_speed = 214 * self.speed_slider.get_value()
             return
         
-        if self.sprites.mouse_click(cursor):
+        if self.sprites.mouse_click(cursor) or self.last_creation == None:
             return
         
+        d1 = datetime.strftime(self.last_creation,"%H:%M:%S")
+        d2 = datetime.strftime(datetime.now(),"%H:%M:%S")
         
+        if abs((d2-d1).seconds) < 1:
+            return
+        print("This happens")
         id_list = self.sprites.id_list()
         new_id = max(id_list) + 1
         new = RigidBody(
@@ -59,7 +68,8 @@ class Engine:
             cursor[0],
             cursor[1]
             )
-        self.sprites.add(new)            
+        self.sprites.add(new)   
+        self.last_creation = datetime.now()         
     
     def update_text(self):
         self.text = self.font.render(f'Speed x {round(self.time_speed / 21.4)/10}', True, (230,230,230), (35,35,35))
