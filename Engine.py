@@ -133,20 +133,23 @@ class Engine:
 
         self.render_frame()
 
+        # Animation Update
+        self.update_sprites()
+        self.update_text()
+        self.update_cursor_rect()
+        
+        # Check for events
         for event in p.event.get():
             if event.type == p.QUIT:
                 p.quit()
                 sys.exit(0)
+            elif event.type == p.MOUSEBUTTONDOWN:
+                # Click Update
+                self.update_click()
 
-        # Animation Update
-        self.update_sprites()
-        self.update_text()
-        # Cursor Update
-        self.update_cursor_rect()
-        self.update_click()
-
+        # Next Frame
         self.clock.tick(self.time_speed)
-    
+        
     # Lifecycle
     def start(self):
         while True:
