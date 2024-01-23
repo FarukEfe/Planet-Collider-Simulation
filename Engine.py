@@ -1,7 +1,7 @@
 # Import Modules
 import pygame as p
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import time
 # Random Generation
 from RandomGenerator import rigid_random
@@ -61,6 +61,20 @@ class Engine:
             self.time_speed = 214 * self.speed_slider.get_value()
             print("Slider modified")
             return
+            
+        # Implement cooldown
+        d1 = datetime.today() - timedelta(seconds=5)
+        if self.last_creation != None:
+            d1 = self.last_creation
+        
+        d2 = datetime.now()
+
+        if abs((d2-d1).seconds) < 0.5:
+            print("Cooldown not yet over")
+            return
+        
+        # Reset last modification to sprites
+        self.last_creation = datetime.now()   
         
         # Kill object if clicked on then return
         clicked_obj = p.sprite.spritecollideany(self.cursor_rect,self.sprites)
@@ -68,19 +82,8 @@ class Engine:
             clicked_obj.kill()
             print("Object killed")
             return
-            
-        # Implement cooldown
-        d1 = datetime.now()#datetime.strftime(datetime.now(),"%H:%M:%S")
-        if self.last_creation != None:
-            d1 = self.last_creation#datetime.strftime(self.last_creation,"%H:%M:%S")
         
-        d2 = datetime.now()#datetime.strftime(datetime.now(),"%H:%M:%S")
-
-        if abs((d2-d1).seconds) < 1:
-            print("Cooldown not yet over")
-            return
-        
-        # Make new object
+        # Otherwise, make new object
         id_list = self.sprites.id_list()
         new_id = max(id_list) + 1
         new = RigidBody(
@@ -93,8 +96,7 @@ class Engine:
             cursor[0],
             cursor[1]
             )
-        self.sprites.add(new)   
-        self.last_creation = datetime.now()         
+        self.sprites.add(new)         
     
     def update_text(self):
         self.text = self.font.render(f'Speed x {round(self.time_speed / 21.4)/10}', True, (230,230,230), (35,35,35))
