@@ -1,9 +1,18 @@
+# Import Modules
 import pygame as p
 import sys
 from datetime import date, datetime
+import time
+# Random Generation
 from RandomGenerator import rigid_random
+# Game Objects
 from Slider import Slider
 from RigidBody import RigidBody, Ball
+from CursorCollideRect import CursorCollideRect
+
+# For Debugging System
+import threading
+import subprocess
 
 WIDTH = 1000
 HEIGHT = 600
@@ -34,6 +43,10 @@ class Engine:
         self.textRect.right = WIDTH - 115
         self.textRect.centery = 55
 
+        # Cursor Rect
+        self.cursor_rect = CursorCollideRect()
+
+
     def update_click(self):
         mouse_pressed = p.mouse.get_pressed()[0]
 
@@ -42,20 +55,32 @@ class Engine:
         
         cursor = p.mouse.get_pos()
 
+        # Move slider if clicked on and return
         if self.speed_slider.container.collidepoint(cursor):
             self.speed_val = self.speed_slider.set_button_pos(cursor)
             self.time_speed = 214 * self.speed_slider.get_value()
+            print("Slider modified")
             return
         
-        if self.sprites.mouse_click(cursor) or self.last_creation == None:
+        # Kill object if clicked on then return
+        clicked_obj = p.sprite.spritecollideany(self.cursor_rect,self.sprites)
+        if clicked_obj != None:
+            clicked_obj.kill()
+            print("Object killed")
             return
+            
+        # Implement cooldown
+        d1 = datetime.now()#datetime.strftime(datetime.now(),"%H:%M:%S")
+        if self.last_creation != None:
+            d1 = self.last_creation#datetime.strftime(self.last_creation,"%H:%M:%S")
         
-        d1 = datetime.strftime(self.last_creation,"%H:%M:%S")
-        d2 = datetime.strftime(datetime.now(),"%H:%M:%S")
-        
+        d2 = datetime.now()#datetime.strftime(datetime.now(),"%H:%M:%S")
+
         if abs((d2-d1).seconds) < 1:
+            print("Cooldown not yet over")
             return
-        print("This happens")
+        
+        # Make new object
         id_list = self.sprites.id_list()
         new_id = max(id_list) + 1
         new = RigidBody(
@@ -82,8 +107,15 @@ class Engine:
         self.sprites.update_accelerations()
         self.sprites.update_positions()
     
+    def update_cursor_rect(self):
+        cursor_pos = p.mouse.get_pos()
+        self.cursor_rect.update_location(cursor_pos)
+    
     def render_frame(self):
         self.window.fill((35,35,35))
+
+        # Draw Cursor Box
+        self.cursor_rect.draw(self.window)
 
         # Display Text & Slider
         self.window.blit(self.text, self.textRect)
@@ -104,10 +136,11 @@ class Engine:
                 p.quit()
                 sys.exit(0)
 
+        # Animation Update
         self.update_sprites()
-
         self.update_text()
-
+        # Cursor Update
+        self.update_cursor_rect()
         self.update_click()
 
         self.clock.tick(self.time_speed)
@@ -117,6 +150,16 @@ class Engine:
         while True:
             self.run()
 
+def debug():
+    while True:
+        time.sleep(1)
+        subprocess.run("clear")
+
+
 if __name__ == "__main__":
     PyGame = Engine(gen_n=15,central_mass=False)
     PyGame.start()
+
+    # Clear terminal to see final log
+    t = threading.Thread(target=debug)
+    t.start()
