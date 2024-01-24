@@ -78,12 +78,11 @@ class Engine:
         
         d2 = datetime.now()
 
+        # Change cooldown here...
         if abs((d2-d1).seconds) < 0.5:
             print("Cooldown not yet over")
             return
-        
-        # Reset last modification to sprites
-        self.last_creation = datetime.now()   
+          
         
         # Kill object if clicked on then return
         clicked_obj = p.sprite.spritecollideany(self.cursor_rect,self.sprites)
@@ -91,6 +90,9 @@ class Engine:
             clicked_obj.kill()
             print("Object killed")
             return
+        
+        # Reset last modification to sprites
+        self.last_creation = datetime.now() 
         
         # Otherwise, make new object
         id_list = self.sprites.id_list()
@@ -145,6 +147,7 @@ class Engine:
         # Animation Update
         self.update_sprites()
         self.update_text()
+        # Slider and Collide Cursor Update
         self.update_cursor_rect()
         ignore_tap = self.update_slider()
         
