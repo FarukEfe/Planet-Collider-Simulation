@@ -96,7 +96,9 @@ class Engine:
         
         # Otherwise, make new object
         id_list = self.sprites.id_list()
-        new_id = max(id_list) + 1
+        new_id = 0
+        if len(id_list) > 0:
+            new_id = max(id_list) + 1
         new = RigidBody(
             [0,0],
             [0,0],
