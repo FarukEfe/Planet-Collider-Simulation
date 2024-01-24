@@ -46,6 +46,22 @@ class Engine:
         # Cursor Rect
         self.cursor_rect = CursorCollideRect()
 
+    # Returns if should ignore MOUSEBUTTONDOWN
+    def update_slider(self) -> bool:
+        mouse_pressed = p.mouse.get_pressed()[0]
+
+        if not mouse_pressed:
+            return False
+        
+        cursor = p.mouse.get_pos()
+
+        # Move slider if clicked on and return
+        if self.speed_slider.container.collidepoint(cursor):
+            self.speed_val = self.speed_slider.set_button_pos(cursor)
+            self.time_speed = 214 * self.speed_slider.get_value()
+            return True
+        return False
+
 
     def update_click(self):
         mouse_pressed = p.mouse.get_pressed()[0]
@@ -54,13 +70,6 @@ class Engine:
             return
         
         cursor = p.mouse.get_pos()
-
-        # Move slider if clicked on and return
-        if self.speed_slider.container.collidepoint(cursor):
-            self.speed_val = self.speed_slider.set_button_pos(cursor)
-            self.time_speed = 214 * self.speed_slider.get_value()
-            print("Slider modified")
-            return
             
         # Implement cooldown
         d1 = datetime.today() - timedelta(seconds=5)
@@ -137,13 +146,14 @@ class Engine:
         self.update_sprites()
         self.update_text()
         self.update_cursor_rect()
+        ignore_tap = self.update_slider()
         
         # Check for events
         for event in p.event.get():
             if event.type == p.QUIT:
                 p.quit()
                 sys.exit(0)
-            elif event.type == p.MOUSEBUTTONDOWN:
+            elif event.type == p.MOUSEBUTTONDOWN and not ignore_tap:
                 # Click Update
                 self.update_click()
 
