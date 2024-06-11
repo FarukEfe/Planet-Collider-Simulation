@@ -9,7 +9,7 @@ from RandomGenerator import rigid_random
 from Slider import Slider
 from RigidBody import RigidBody, Ball
 from CursorCollideRect import CursorCollideRect
-
+from CollideGroup import CollideGroup
 # For Debugging System
 import threading
 import subprocess
@@ -26,10 +26,22 @@ class Engine:
     # Track last object creation
     last_creation: date = None
 
-    def __init__(self, gen_n:int, central_mass:bool):
+    def __init__(self):
         p.init()
         p.display.set_caption("Planet Collider")
 
+        # Initialized properties
+        self.sprites: CollideGroup = None
+        self.speed_slider: Slider = None
+
+        self.font = None
+        self.text = None
+        self.textRect = None
+
+        self.cursor_rect = CursorCollideRect()
+    
+    # Generate rigidbodies
+    def generate(self,gen_n:int,central_mass:bool):
         # Sprite Setup
         self.sprites = rigid_random(gen_n,WIDTH,HEIGHT,central_mass)
 
@@ -42,9 +54,17 @@ class Engine:
         self.textRect = self.text.get_rect()
         self.textRect.right = WIDTH - 115
         self.textRect.centery = 55
+    
+    # Reset rigidbodies
+    def reset_playground(self):
+        self.sprites: CollideGroup = None
+        self.speed_slider: Slider = None
 
-        # Cursor Rect
-        self.cursor_rect = CursorCollideRect()
+        self.font = None
+        self.text = None
+        self.textRect = None
+
+    
 
     # Returns if should ignore MOUSEBUTTONDOWN
     def update_slider(self) -> bool:
@@ -177,8 +197,9 @@ def debug():
 
 
 if __name__ == "__main__":
-    PyGame = Engine(gen_n=15,central_mass=False)
-    PyGame.start()
+    engine = Engine()
+    engine.generate(15,False)
+    engine.start()
 
     # Clear terminal to see final log
     t = threading.Thread(target=debug)
