@@ -26,6 +26,10 @@ class Engine:
     # Track last object creation
     last_creation: date = None
 
+    # Track Game Navigation State
+    central_mass = False
+    game_on = True
+
     def __init__(self):
         p.init()
         p.display.set_caption("Planet Collider")
@@ -39,33 +43,9 @@ class Engine:
         self.textRect = None
 
         self.cursor_rect = CursorCollideRect()
+
+    ### MARK: FOR RENDERING PLAYGROUND
     
-    # Generate rigidbodies
-    def generate(self,gen_n:int,central_mass:bool):
-        # Sprite Setup
-        self.sprites = rigid_random(gen_n,WIDTH,HEIGHT,central_mass)
-
-        # Slider Setup
-        self.speed_slider = Slider((WIDTH - 125,75),(100,8),0.2,0,100)
-
-        # Slider Text
-        self.font = p.font.Font('freesansbold.ttf', 12)
-        self.text = self.font.render(f'Speed x {self.time_speed / 214}', True, (230,230,230), (35,35,35))
-        self.textRect = self.text.get_rect()
-        self.textRect.right = WIDTH - 115
-        self.textRect.centery = 55
-    
-    # Reset rigidbodies
-    def reset_playground(self):
-        self.sprites: CollideGroup = None
-        self.speed_slider: Slider = None
-
-        self.font = None
-        self.text = None
-        self.textRect = None
-
-    
-
     # Returns if should ignore MOUSEBUTTONDOWN
     def update_slider(self) -> bool:
         mouse_pressed = p.mouse.get_pressed()[0]
@@ -162,7 +142,7 @@ class Engine:
         p.display.flip()
     
     # Per Frame Tasks
-    def run(self):
+    def run_playground(self):
 
         self.render_frame()
 
@@ -184,11 +164,50 @@ class Engine:
 
         # Next Frame
         self.clock.tick(self.time_speed)
+
+    ### MARK: RENDERING MAIN MENU
+
+    def main_menu(self):
+        pass
+
+    ### MARK: NAVIGATION
+
+    # Generate rigidbodies
+    def generate(self,gen_n:int,central_mass:bool):
+        # Sprite Setup
+        self.sprites = rigid_random(gen_n,WIDTH,HEIGHT,central_mass)
+
+        # Slider Setup
+        self.speed_slider = Slider((WIDTH - 125,75),(100,8),0.2,0,100)
+
+        # Slider Text
+        self.font = p.font.Font('freesansbold.ttf', 12)
+        self.text = self.font.render(f'Speed x {self.time_speed / 214}', True, (230,230,230), (35,35,35))
+        self.textRect = self.text.get_rect()
+        self.textRect.right = WIDTH - 115
+        self.textRect.centery = 55
+    
+    # Reset rigidbodies
+    def reset_playground(self):
+        self.sprites: CollideGroup = None
+        self.speed_slider: Slider = None
+
+        self.font = None
+        self.text = None
+        self.textRect = None
+
+    ### MARK: MAINLOOP
+    
+    def mainloop(self):
+        if self.game_on:
+            self.run_playground()
+        else:
+            self.main_menu()
         
     # Lifecycle
     def start(self):
         while True:
-            self.run()
+            self.mainloop()
 
 def debug():
     while True:
