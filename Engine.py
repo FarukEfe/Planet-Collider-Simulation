@@ -173,7 +173,7 @@ class Engine:
     ### MARK: NAVIGATION
 
     # Generate rigidbodies
-    def generate(self,gen_n:int,central_mass:bool):
+    def __generate(self,gen_n:int,central_mass:bool):
         # Sprite Setup
         self.sprites = rigid_random(gen_n,WIDTH,HEIGHT,central_mass)
 
@@ -188,13 +188,21 @@ class Engine:
         self.textRect.centery = 55
     
     # Reset rigidbodies
-    def reset_playground(self):
+    def __reset_playground(self):
         self.sprites: CollideGroup = None
         self.speed_slider: Slider = None
 
         self.font = None
         self.text = None
         self.textRect = None
+    
+    def setup_pg(self):
+        self.__generate(10,self.central_mass)
+        self.game_on = True
+    
+    def reset(self):
+        self.__reset_playground()
+        self.game_on = False
 
     ### MARK: MAINLOOP
     
@@ -217,7 +225,7 @@ def debug():
 
 if __name__ == "__main__":
     engine = Engine()
-    engine.generate(15,False)
+    engine.setup_pg()
     engine.start()
 
     # Clear terminal to see final log
